@@ -69,7 +69,7 @@ int main(){
 
 	alocar('A', 14);
 	alocar('B', 30);
-	//liberar(0,14);
+	liberar(0,14);
 
 	//IMPRIMIR ESTADO DE LA MEMORIA
 	//temporal, está choto
@@ -82,10 +82,10 @@ int main(){
 		}
 		std::cout<<std::endl;
 	}
-	for(int i=0;i<9;i++){
+	for(int i=0;i<10;i++){
 		std::cout<<i<<":";
 		free_list[i].Recorrer();
-		std::cout<<"HOLA"<<std::endl;
+		std::cout<<std::endl;
 	}	
 	return 0;
 }

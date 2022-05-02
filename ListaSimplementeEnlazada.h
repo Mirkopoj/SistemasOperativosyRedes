@@ -271,6 +271,7 @@ public:
          CNodo<T> *aux = inicio;
 		   CNodo<T> buf = *inicio;
 			inicio = aux->getSig();
+			n--;
 			delete aux;
 			return buf;
     }
@@ -281,6 +282,7 @@ public:
         if (dato == aux->dato){
 			   inicio = aux->getSig();
 				delete aux;
+				n--;
 				return buf;
         }
 		  CNodo<T> *bufptr;
@@ -290,6 +292,7 @@ public:
 					 aux->Relink(aux->getSig()->getSig());
 					 buf = *bufptr;
 					 delete bufptr;
+					 n--;
                 return buf;
             }
             aux=aux->getSig();
