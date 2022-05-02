@@ -3,7 +3,10 @@
 #endif
 
 #include <iostream>
-#include "Pila.h"
+#include "ListaSimplementeEnlazada.h"
+
+#define Push(X) insertarEn(0,X) 
+#define adress dato
 
 //Nº maximo de marcos en memoria
 #define MEM 512
@@ -13,6 +16,9 @@ class bloque_libre{
 public:
 	int adress;
 	bloque_libre(int adr):adress(adr){};
+	void Imprimir(){
+		std::cout<<adress<<", ";
+	}
 };
 
 //TABLA DE ALOCACIONES
@@ -20,7 +26,7 @@ public:
 char tabla[MEM] = {0};
 
 //FREE LIST
-Pila<bloque_libre> free_list[10];
+Lista<bloque_libre> free_list[10];
 
 //BIT MAP
 bool *bit_map[10];
@@ -40,6 +46,10 @@ void alocar(char nombre, int tam);
 int redondear(int tam);
 void actualizar_tabla(int adr, int exp, char nom);
 void actualizar_bit_map_alloc(int adr, int exp);
+int actualiar_bit_map_free(int adr, int exp);
+int min (int a, int b);
+void actualizar_free_list(int adr, int iter, int exp);
+void liberar(int adr, int tam);
 
 int main(){
 	//INICIALIZACION
@@ -59,18 +69,31 @@ int main(){
 
 	alocar('A', 14);
 	alocar('B', 30);
+	//liberar(0,14);
 
 	//IMPRIMIR ESTADO DE LA MEMORIA
 	//temporal, está choto
-	for(int i=0;i<MEM;i++){
+	for(int i=0;i<64;i++){
 		std::cout<<i<<":"<<tabla[i]<<std::endl;
 	}
+	for(int i=9;i>2;i--){
+		for(int j=0;j<(MEM/(1<<i));j++){
+			std::cout<<bit_map[i][j];
+		}
+		std::cout<<std::endl;
+	}
+	for(int i=0;i<9;i++){
+		std::cout<<i<<":";
+		free_list[i].Recorrer();
+		std::cout<<"HOLA"<<std::endl;
+	}	
 	return 0;
 }
 
 int redondear(int tam){	//Devuelve el exponente de la potencia de 2 inmediatamente superior
-	int exponente = 1;
-	while(tam != 1){
+	tam--;
+	int exponente = 0;
+	while(tam != 0){
 		tam >>= 1;
 		exponente++;
 	}
@@ -84,11 +107,36 @@ void actualizar_tabla(int adr, int exp, char nom){	//Pone el nombre del bloque a
 }
 
 void actualizar_bit_map_alloc(int adr, int exp){ //Hace un toggle al bit de la pareja especificada, y propaga hacia arriba
-	bit_map[exp][adr>>exp]=!bit_map[exp][adr>>exp];
-	if(exp<8){
+	int bit = adr>>exp;
+	bit_map[exp][bit]=!bit_map[exp][bit];
+	if(bit_map[exp][bit]==1 && exp<9){
 		actualizar_bit_map_alloc(adr, exp+1);
 	}
 	return;
+}
+
+int actualiar_bit_map_free(int adr, int exp){
+	int ret = 1;
+	int bit = adr>>exp;
+	bit_map[exp][bit]=!bit_map[exp][exp];
+	if(bit_map[exp][bit]==0 && exp<9){
+		ret += actualiar_bit_map_free(adr, exp+1);
+	}
+	return ret;
+}
+
+int min (int a, int b){
+	return (a<b)? a:b;
+}
+
+void actualizar_free_list(int adr, int iter, int exp){
+	int buddy_adr;
+	for(int i=0;i<iter;i++){
+		buddy_adr = adr ^ (1<<(exp+i));
+		free_list[exp+i].SuprimirDatoPrincipal(buddy_adr);
+		adr = min(adr, buddy_adr);
+	}
+	free_list[exp+iter].Push(adr);
 }
 
 void alocar(char nombre, int tam){ //Busca en la FREE LIST donde alocar, y dsp actualiza el bit_map y la tabla para imprimir
@@ -105,4 +153,12 @@ void alocar(char nombre, int tam){ //Busca en la FREE LIST donde alocar, y dsp a
 	}
 	actualizar_bit_map_alloc(asignacion.adress, exp_asignado);
 	actualizar_tabla(asignacion.adress, exp_asignado, nombre);
+}
+
+void liberar(int adr, int tam){
+	int exp_asignado = redondear(tam);
+	int merge_count;
+	merge_count = actualiar_bit_map_free(adr, exp_asignado);
+	actualizar_free_list(adr, merge_count, exp_asignado);
+	actualizar_tabla(adr, exp_asignado, '\0');
 }
