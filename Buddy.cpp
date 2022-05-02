@@ -5,7 +5,7 @@
 #include <iostream>
 #include "ListaSimplementeEnlazada.h"
 
-#define Push(X) insertarEn(0,X) 
+//#define Push(X) insertarEn(0,X) 
 #define adress dato
 
 //Nº maximo de marcos en memoria

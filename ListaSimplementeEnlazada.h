@@ -275,6 +275,15 @@ public:
 			delete aux;
 			return buf;
     }
+    template<typename... data> 
+    int Push(data... datos){
+        CNodo<T> *aux;              //en la posicion data
+        aux = new CNodo<T>(inicio, datos...);
+        if(aux==NULL) return -1;
+        inicio = aux;
+        n++;
+        return 1;
+    }
     template<typename data>
     T PopNodoDatoPrincipal(data dato){    //Devuelve nodo que contenga dato principal y lo elimina, Insegura (chequear que no este vacia)
         CNodo<T> *aux = inicio;
