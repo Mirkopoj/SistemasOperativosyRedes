@@ -1,4 +1,7 @@
 #pragma once
+#ifdef __WARN__
+	#include <iostream>
+#endif
 template<typename dato,typename... data>
 dato principal(dato org, data... resto){    //Devuelve el primer dato de un paquete para poder manipularlo
     return org;                             //se puede overloadear si el dato de comparacion se calcula del paquete
@@ -49,7 +52,7 @@ class Lista{
             case '!':
                 return datoa!=datob? 1:0;
             default:
-                std::cout<<"ERROR de comparacion defaulteo a '<'";
+                //std::cout<<"ERROR de comparacion defaulteo a '<'";
                 return datoa<datob? 1:0;
             }
         }
@@ -61,11 +64,13 @@ class Lista{
         return 1;
     } 
 public:
-    Lista():n(0),inicio(NULL),op('<'){}
-    Lista(const char* opovr):n(0),inicio(NULL),op(*opovr){
+    Lista():n(0),inicio(nullptr),op('<'){}
+    Lista(const char* opovr):n(0),inicio(nullptr),op(*opovr){
         if(op!='<'&&op!='>'&&op!='{'&&op!='}'&&op!='='&&op!='!'){
-            std::cout<<"Operador invalido default a '<'"<<std::endl;
-            op='<';
+				#ifdef __WARN__
+					std::cout<<"Operador invalido default a '<'"<<std::endl;
+				#endif
+				op='<';
         }
         switch(opovr[1]){   //Reduce la expercion del string de entrada
             case '\0':      //a un unico char que codifica el operador de comparacion
@@ -83,7 +88,9 @@ public:
                     case '!':
                         break;
                     default:
-                        std::cout<<"Operador invalido default a '<'"<<std::endl;
+								#ifdef __WARN__
+									std::cout<<"Operador invalido default a '<'"<<std::endl;
+								#endif
                         op='<';
                         break;
                 }
@@ -97,13 +104,15 @@ public:
                 else op='{';
                 break;
             default:
-                std::cout<<"Operador invalido default a '<'"<<std::endl;
+					 #ifdef __WARN__
+						std::cout<<"Operador invalido default a '<'"<<std::endl;
+					 #endif
                 op='<';
                 break;
         }
     }
     int EstaVacia()const{   //Devuelve 1 si esta vacia, 0 si no
-        return n==0 && inicio==NULL? 1 : 0;
+        return n==0 && inicio==nullptr? 1 : 0;
     }
     template<typename... data> 
     int insertarEn(int pos, data... datos){
@@ -111,7 +120,7 @@ public:
         CNodo<T> *aux;              //en la posicion data
         if(pos==0){
             aux = new CNodo<T>(inicio, datos...);
-            if(aux==NULL) return -1;
+            if(aux==nullptr) return -1;
             inicio = aux;
             n++;
             return 1;
@@ -120,7 +129,7 @@ public:
         buff = inicio;
         for(int i=0;i<pos-1;i++) buff = buff->getSig();
         aux = new CNodo<T>(buff->getSig(), datos...);
-        if(aux==NULL) return -1;
+        if(aux==nullptr) return -1;
         buff->Relink(aux);
         n++;
         return 1;
@@ -130,15 +139,15 @@ public:
         CNodo<T> *buff,*aux;    //Inserta un nodo con los datos dados al final de la lista
         buff = inicio;
         if(n==0){
-            aux = new CNodo<T>(NULL, datos...);
-            if(aux==NULL) return -1;
+            aux = new CNodo<T>(nullptr, datos...);
+            if(aux==nullptr) return -1;
             inicio = aux;
             n++;
             return 1;    
         }
         for(int i=0;i<n-1;i++) buff = buff->getSig();
         aux = new CNodo<T>(buff->getSig(), datos...);
-        if(aux==NULL) return -1;
+        if(aux==nullptr) return -1;
         buff->Relink(aux);
         n++;
         return 1;
@@ -148,16 +157,16 @@ public:
         CNodo<T> *aux;                  //Compara en funcion de la veriable "op"                
         if(EstaVacia() || comparar(principal(datos...),inicio->dato)){
             aux = new CNodo<T>(inicio, datos...);
-            if(aux==NULL) return -1;
+            if(aux==nullptr) return -1;
             inicio = aux;
             n++;
             return 1;
         }
         CNodo<T> *buff;
         buff = inicio;
-        while(buff->getSig()!=NULL && comparar(buff->getSig()->dato,principal(datos...))) buff = buff->getSig();
+        while(buff->getSig()!=nullptr && comparar(buff->getSig()->dato,principal(datos...))) buff = buff->getSig();
         aux = new CNodo<T>(buff->getSig(), datos...);
-        if(aux==NULL) return -1;
+        if(aux==nullptr) return -1;
         buff->Relink(aux);
         n++;
         return 1;
@@ -165,7 +174,7 @@ public:
     int Recorrer()const{   //Imprime todos los elementos de la lista de inicio a fin
         if (EstaVacia()) return -1;
         CNodo<T> *nodo = inicio;
-        while(nodo->getSig() != NULL){
+        while(nodo->getSig() != nullptr){
             nodo->Imprimir();
             nodo = nodo->getSig();
         }
@@ -187,7 +196,7 @@ public:
             inicio=aux;
             if (EstaVacia()) return borre_x != n? 1 : -1;
         }
-        while (aux->getSig() != NULL) {
+        while (aux->getSig() != nullptr) {
             if (igual(aux2,(T)*(aux->getSig()))){
                 buff = aux->getSig()->getSig();
                 delete aux->getSig();
@@ -211,7 +220,7 @@ public:
             inicio=aux;
             if (EstaVacia()) return borre_x != n? 1 : -1;
         }
-        while (aux->getSig() != NULL) {
+        while (aux->getSig() != nullptr) {
             if (dato == aux->getSig()->dato){
                 buff = aux->getSig()->getSig();
                 delete aux->getSig();
@@ -219,7 +228,7 @@ public:
                 n--;
                 continue;
             }
-            if(aux->getSig()!=NULL) aux=aux->getSig();
+            if(aux->getSig()!=nullptr) aux=aux->getSig();
         }
         return borre_x != n? 1 : -1;
     }
@@ -246,7 +255,7 @@ public:
         return n;
     }
     T *DevolverDatoPosicion(int pos)const{
-        if(pos>=n) return NULL; //Devuelve un puntero al nodo en la posicion pedida
+        if(pos>=n) return nullptr; //Devuelve un puntero al nodo en la posicion pedida
         CNodo<T>* buff;
         buff=inicio;
         for(int i=0;i<pos;i++) buff=buff->getSig();
@@ -254,18 +263,18 @@ public:
     }
     template<typename data>
     T *DevolverNodoDatoPrincipal(data dato){    //Devuelve nodo que contenga dato principal
-        if (EstaVacia()) return NULL;
+        if (EstaVacia()) return nullptr;
         CNodo<T> *aux = inicio;
         if (dato == aux->dato){
             return aux;
         }
-        while (aux->getSig() != NULL){
+        while (aux->getSig() != nullptr){
             aux=aux->getSig();
             if (dato == aux->dato){
                 return aux;
             }
         } 
-        return NULL;
+        return nullptr;
     }
     T Pop(){    //Devuelve el primer nodo y lo elimina, Insegura (chequear que no este vacia)
          CNodo<T> *aux = inicio;
@@ -279,7 +288,7 @@ public:
     int Push(data... datos){
         CNodo<T> *aux;              //en la posicion data
         aux = new CNodo<T>(inicio, datos...);
-        if(aux==NULL) return -1;
+        if(aux==nullptr) return -1;
         inicio = aux;
         n++;
         return 1;
@@ -295,7 +304,7 @@ public:
 				return buf;
         }
 		  CNodo<T> *bufptr;
-        while (aux->getSig() != NULL){
+        while (aux->getSig() != nullptr){
             if (dato == aux->getSig()->dato){
 					 bufptr = aux->getSig();
 					 aux->Relink(aux->getSig()->getSig());
@@ -310,7 +319,7 @@ public:
     template<typename... data>
     int DevolverPosicionDato(int pos,data... datos)const{
         if(pos>=n) return -1;                       //Devulve la posicion del primer nodo que contiene los datos dados
-        CNodo<T> buff(NULL, datos...);              //busca entre la posicion dada y el final inclusive               
+        CNodo<T> buff(nullptr, datos...);              //busca entre la posicion dada y el final inclusive               
         buff=*inicio;                               //si pos=0, el intervalo de busqueda es la lista entera           
         for(int i=0;i<pos;i++) buff=*buff.getSig(); //el intervalo de busqueda es [pos,fin]                           
         T aux(datos...);
@@ -330,7 +339,7 @@ public:
             return 0;
         }
         int p=0;
-        while (aux->getSig() != NULL){
+        while (aux->getSig() != nullptr){
             aux=aux->getSig();
             p++;
             if (dato == aux->dato){
@@ -342,13 +351,13 @@ public:
         int Vaciar(){  //Elimina todo los nodos de la lista
         if (EstaVacia()) return 1;
         CNodo<T> *aux;
-        while(inicio->getSig() != NULL){
+        while(inicio->getSig() != nullptr){
             aux = inicio;
             inicio = inicio->getSig();
             delete aux;
         }
         delete inicio;
-        inicio=NULL;
+        inicio=nullptr;
         n=0;
         return EstaVacia()? 1 : -1;
     }
