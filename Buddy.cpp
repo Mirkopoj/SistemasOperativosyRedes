@@ -107,7 +107,7 @@ void actualizar_tabla(int adr, int exp, char nom){	//Pone el nombre del bloque a
 }
 
 void actualizar_bit_map_alloc(int adr, int exp){ //Hace un toggle al bit de la pareja especificada, y propaga hacia arriba
-	int bit = adr>>exp;
+	int bit = adr>>(exp+1);
 	bit_map[exp][bit]=!bit_map[exp][bit];
 	if(bit_map[exp][bit]==1 && exp<9){
 		actualizar_bit_map_alloc(adr, exp+1);
@@ -115,10 +115,10 @@ void actualizar_bit_map_alloc(int adr, int exp){ //Hace un toggle al bit de la p
 	return;
 }
 
-int actualiar_bit_map_free(int adr, int exp){
+int actualiar_bit_map_free(int adr, int exp){	//Idem. actualizar_bit_map_alloc, devuelve el numero de veces que se propagó
 	int ret = 1;
-	int bit = adr>>exp;
-	bit_map[exp][bit]=!bit_map[exp][exp];
+	int bit = adr>>(exp+1);
+	bit_map[exp][bit]=!bit_map[exp][bit];
 	if(bit_map[exp][bit]==0 && exp<9){
 		ret += actualiar_bit_map_free(adr, exp+1);
 	}
@@ -129,8 +129,9 @@ int min (int a, int b){
 	return (a<b)? a:b;
 }
 
-void actualizar_free_list(int adr, int iter, int exp){
+void actualizar_free_list(int adr, int iter, int exp){	//Une todos los buddies libres
 	int buddy_adr;
+	iter--;
 	for(int i=0;i<iter;i++){
 		buddy_adr = adr ^ (1<<(exp+i));
 		free_list[exp+i].SuprimirDatoPrincipal(buddy_adr);
@@ -155,10 +156,11 @@ void alocar(char nombre, int tam){ //Busca en la FREE LIST donde alocar, y dsp a
 	actualizar_tabla(asignacion.adress, exp_asignado, nombre);
 }
 
-void liberar(int adr, int tam){
+void liberar(int adr, int tam){ //Busca en el bit map y dsp actualiza la free_list y la abla para imprimir
 	int exp_asignado = redondear(tam);
 	int merge_count;
 	merge_count = actualiar_bit_map_free(adr, exp_asignado);
+	std::cout<<merge_count<<std::endl;	
 	actualizar_free_list(adr, merge_count, exp_asignado);
 	actualizar_tabla(adr, exp_asignado, '\0');
 }
