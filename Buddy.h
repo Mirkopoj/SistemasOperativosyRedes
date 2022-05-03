@@ -13,12 +13,6 @@ public:
 	void Imprimir();
 };
 
-//Estructura para el descriptod de pagina
-typedef struct pag_desc{
-	int tamaño;
-    char proceso;
-}pag_desc;
-
 //PROTOTIPOS
 int alocar(int tam);
 int redondear(int tam);

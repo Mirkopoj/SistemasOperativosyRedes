@@ -2,7 +2,7 @@
 #include "Buddy.h"
 
 //Considerar, hacer que funcione con (void*) en lugar de (int)
-int buddy_malloc(int size_to_alloc);
-void buddy_free(int adress);
+void *buddy_malloc(void *size_to_alloc);
+void buddy_free(void *adress);
 
 #include "Buddy_malloc.cpp"
