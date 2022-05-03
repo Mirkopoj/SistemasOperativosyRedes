@@ -13,20 +13,14 @@ public:
 	void Imprimir();
 };
 
-//Estructura para el descriptod de pagina
-typedef struct pag_desc{
-	int tamaño;
-    char proceso;
-}pag_desc;
-
 //PROTOTIPOS
 int alocar(int tam);
-int redondear(int tam);
-void actualizar_bit_map_alloc(int adr, int exp);
-int actualiar_bit_map_free(int adr, int exp);
+char redondear(int tam);
+void actualizar_bit_map_alloc(int adr, char exp);
+char actualiar_bit_map_free(int adr, char exp);
 int min (int a, int b);
-void actualizar_free_list(int adr, int iter, int exp);
-void liberar(int adr, int tam);
+void actualizar_free_list(int adr, char iter, char exp);
+void liberar(int adr, char exp_asignado);
 void buddy_init();
 
 #include "Buddy.cpp"

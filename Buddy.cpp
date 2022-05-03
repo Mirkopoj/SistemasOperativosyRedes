@@ -1,7 +1,4 @@
 #pragma once
-#ifdef __CLANG__
-	#define NULL nullptr
-#endif
 #include "ListaSimplementeEnlazada.h"
 #include "Buddy.h"
 
@@ -21,9 +18,6 @@ bool piso_7[MEM/128] = {0};
 bool piso_8[MEM/256] = {0};
 bool piso_9[MEM/512] = {0};
 
-//Memory descriptor
-pag_desc mem_map[MEM];
-
 void buddy_init(){
 	free_list[9].Push(0);
 
@@ -39,9 +33,9 @@ void buddy_init(){
 	bit_map[9] = piso_9;
 }
 
-int redondear(int tam){	//Devuelve el exponente de la potencia de 2 inmediatamente superior
+char redondear(int tam){	//Devuelve el exponente de la potencia de 2 inmediatamente superior
 	tam--;
-	int exponente = 0;
+	char exponente = 0;
 	while(tam != 0){
 		tam >>= 1;
 		exponente++;
@@ -49,7 +43,7 @@ int redondear(int tam){	//Devuelve el exponente de la potencia de 2 inmediatamen
 	return exponente;
 }
 
-void actualizar_bit_map_alloc(int adr, int exp){ //Hace un toggle al bit de la pareja especificada, y propaga hacia arriba
+void actualizar_bit_map_alloc(int adr, char exp){ //Hace un toggle al bit de la pareja especificada, y propaga hacia arriba
 	int bit = adr>>(exp+1);
 	bit_map[exp][bit]=!bit_map[exp][bit];
 	if(bit_map[exp][bit]==1 && exp<9){
@@ -58,8 +52,8 @@ void actualizar_bit_map_alloc(int adr, int exp){ //Hace un toggle al bit de la p
 	return;
 }
 
-int actualiar_bit_map_free(int adr, int exp){	//Idem. actualizar_bit_map_alloc, devuelve el numero de veces que se propagó
-	int ret = 1;
+char actualiar_bit_map_free(int adr, char exp){	//Idem. actualizar_bit_map_alloc, devuelve el numero de veces que se propagó
+	char ret = 1;
 	int bit = adr>>(exp+1);
 	bit_map[exp][bit]=!bit_map[exp][bit];
 	if(bit_map[exp][bit]==0 && exp<9){
@@ -72,10 +66,10 @@ int min (int a, int b){
 	return (a<b)? a:b;
 }
 
-void actualizar_free_list(int adr, int iter, int exp){	//Une todos los buddies libres
+void actualizar_free_list(int adr, char iter, char exp){	//Une todos los buddies libres
 	int buddy_adr;
 	iter--;
-	for(int i=0;i<iter;i++){
+	for(char i=0;i<iter;i++){
 		buddy_adr = adr ^ (1<<(exp+i));
 		free_list[exp+i].SuprimirDatoPrincipal(buddy_adr);
 		adr = min(adr, buddy_adr);
@@ -84,7 +78,7 @@ void actualizar_free_list(int adr, int iter, int exp){	//Une todos los buddies l
 }
 
 int alocar(int tam){ //Busca en la FREE LIST donde buddy_alloc, y dsp actualiza el bit_map
-	int exp_asignado = redondear(tam);	
+	char exp_asignado = redondear(tam);	
 	int i = exp_asignado;
 	while(free_list[i].EstaVacia()){
 		i++;
@@ -99,9 +93,8 @@ int alocar(int tam){ //Busca en la FREE LIST donde buddy_alloc, y dsp actualiza 
 	return asignacion.adress;
 }
 
-void liberar(int adr, int tam){ //Busca en el bit map y dsp actualiza la free_list y la abla para imprimir
-	int exp_asignado = redondear(tam);
-	int merge_count;
+void liberar(int adr, char exp_asignado){ //Busca en el bit map y dsp actualiza la free_list y la abla para imprimir
+	char merge_count;
 	merge_count = actualiar_bit_map_free(adr, exp_asignado);
 	actualizar_free_list(adr, merge_count, exp_asignado);
 }
