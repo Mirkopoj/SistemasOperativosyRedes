@@ -11,9 +11,11 @@ void bloque_libre::Imprimir(){
 char tabla[MEM] = {0};
 
 void actualizar_tabla(int adr, int tam, char nom);
+void tabla_init();
 
 int main(){
 	buddy_init();
+	tabla_init();
 
 	int ptr1, ptr2;
 
@@ -22,7 +24,7 @@ int main(){
 	ptr2 = buddy_malloc(30);
 	actualizar_tabla(ptr2, 30, 'B');
 	buddy_free(ptr1);
-	actualizar_tabla(ptr1, 14, ' ');
+	actualizar_tabla(ptr1, 14, '_');
 
 	//IMPRIMIR ESTADO DE LA MEMORIA
 	//temporal, está choto
@@ -35,12 +37,18 @@ int main(){
 		}
 		std::cout<<std::endl;
 	}
-	for(int i=0;i<10;i++){
+	for(int i=9;i>=0;i--){
 		std::cout<<i<<":";
 		free_list[i].Recorrer();
 		std::cout<<std::endl;
 	}	
 	return 0;
+}
+
+void tabla_init(){
+	for(int i=0; i<MEM; i++){
+		tabla[i]='_';
+	}	
 }
 
 void actualizar_tabla(int adr, int tam, char nom){	//Pone el nombre del bloque alocado para dsp imprimirlo (solucion fea)
