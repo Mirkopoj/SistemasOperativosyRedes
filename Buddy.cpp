@@ -21,6 +21,9 @@ bool piso_7[MEM/128] = {0};
 bool piso_8[MEM/256] = {0};
 bool piso_9[MEM/512] = {0};
 
+//Memory descriptor
+pag_desc mem_map[MEM];
+
 void buddy_init(){
 	free_list[9].Push(0);
 
