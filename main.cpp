@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Buddy.cpp"
 #include "Buddy.h"
 #include "Buddy_malloc.h"
 
@@ -55,11 +56,18 @@ int main(){
 		}
 		std::cout<<std::endl;
 	}
+	int pad;
 	for(int i=9;i>2;i--){
-		for(int j=0;j<(MEM/(1<<i));j++){
-			std::cout<<bit_map[i][j];
+		for(int k=0;k<129;k++){
+			std::cout<<"_";
 		}
 		std::cout<<std::endl;
+		pad = 1<<(i-3);
+		for(int j=0;j<(MEM/(1<<i));j++){
+			printf("%-*c%-*d", pad, '|', pad, bit_map[i][j]);
+			//std::cout<<bit_map[i][j];
+		}
+		std::cout<<"|"<<std::endl;
 	}
 	for(int i=9;i>=0;i--){
 		std::cout<<i<<":";
