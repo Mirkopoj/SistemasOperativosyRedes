@@ -46,29 +46,59 @@ int main(){
 	actualizar_tabla(ptr2, 30, 'B');
 	buddy_free(ptr1);
 	actualizar_tabla(ptr1, 14, '_');
-
-	printf(FWHT("%c"),204);
+	
 	//IMPRIMIR ESTADO DE LA MEMORIA
-	//temporal, está choto
+	printf(FWHT("%c"),201);
+	for (int i = 0; i < 32; i++){
+		printf(FWHT("%c"),205);	
+	}
+	printf(FWHT("%c\n"),187);
 	for(int i=0;i<16;i++){
+		printf(FWHT("%c"),186);
 		for(int j=0;j<32;j++){
 			std::cout<<tabla[32*i+j];
 		}
+		printf(FWHT("%c"),186);
 		std::cout<<std::endl;
 	}
+	printf(FWHT("%c"),200);
+	for (int i = 0; i < 32; i++){
+		printf(FWHT("%c"),205);	
+	}
+	printf(FWHT("%c\n"),188);
+
+	//IMPRIMIR BITMAP
 	int pad;
-	for(int i=9;i>2;i--){
-		for(int k=0;k<129;k++){
-			std::cout<<"_";
-		}
-		std::cout<<std::endl;
+	printf(FWHT("%c"),201); //primer
+	for(int k=0;k<127;k++){
+			printf(FWHT("%c"),205);
+	}
+	printf(FWHT("%c\n"),187);
+
+	for(int i=9;i>3;i--){ //6
 		pad = 1<<(i-3);
 		for(int j=0;j<(MEM/(1<<i));j++){
-			printf("%-*c%-*d", pad, '|', pad, bit_map[i][j]);
-			//std::cout<<bit_map[i][j];
+			printf("%-*c%-*d", pad, 186, pad, bit_map[i][j]);
 		}
-		std::cout<<"|"<<std::endl;
+		printf(FWHT("%c\n"),186);
+		printf(FWHT("%c"),204);
+		for(int k=0;k<127;k++){
+			printf(FWHT("%c"),205);
+		}	
+		printf(FWHT("%c\n"),185);
 	}
+
+	for(int j=0;j<(MEM/(1<<3));j++){ //ultima
+		printf("%c%d", 186, bit_map[3][j]);
+	}
+	printf(FWHT("%c\n"),186);
+	printf(FWHT("%c"),200);
+	for(int k=0;k<127;k++){
+		printf(FWHT("%c"),(205-(k%2)*3));
+	}	
+	printf(FWHT("%c\n"),188);
+
+	//IMPRIMIR FREELIST
 	for(int i=9;i>=0;i--){
 		std::cout<<i<<":";
 		free_list[i].Recorrer();
