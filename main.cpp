@@ -68,7 +68,6 @@ int main(){
 	printf(FWHT("%c\n"),188);
 
 	//IMPRIMIR BITMAP
-	int pad;
 	printf(FWHT("%c"),201); //primer
 	for(int k=0;k<127;k++){
 			printf(FWHT("%c"),205);
@@ -76,14 +75,14 @@ int main(){
 	printf(FWHT("%c\n"),187);
 
 	for(int i=9;i>3;i--){ //6
-		pad = 1<<(i-3);
+		int pad = 1<<(i-3);
 		for(int j=0;j<(MEM/(1<<i));j++){
 			printf("%-*c%-*d", pad, 186, pad, bit_map[i][j]);
 		}
 		printf(FWHT("%c\n"),186);
 		printf(FWHT("%c"),204);
 		for(int k=0;k<127;k++){
-			printf(FWHT("%c"),205);
+			printf(FWHT("%c"),(205-((k%pad)/(pad-1)*2)+(((k%(2*pad))/((2*pad)-1))*3)));
 		}	
 		printf(FWHT("%c\n"),185);
 	}
