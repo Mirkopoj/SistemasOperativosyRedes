@@ -73,6 +73,11 @@ int main(){
 		printf(FWHT("%c"),205);	
 	}
 	printf(FWHT("%c\n"),188);
+	printf(FWHT("Espacio Total: %d"),MEM);
+	printf(FRED("Espacio Ocupado: %d"),);
+	printf(FGRN("Espacio Libre: %d"),);
+	printf(FBLU("Espacio Desperdiciado: %d"),);
+
 
 	//IMPRIMIR BITMAP
 	std::cout<<"BITMAP"<<std::endl;
