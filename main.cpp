@@ -46,12 +46,14 @@ int main(){
 	buddy_free(ptr1);
 	actualizar_tabla(ptr1, 14, '_');
 
-	printf(FWHT("\n%c"),204);
-
+	printf(FWHT("%c"),204);
 	//IMPRIMIR ESTADO DE LA MEMORIA
 	//temporal, está choto
-	for(int i=0;i<64;i++){
-		std::cout<<i<<":"<<tabla[i]<<std::endl;
+	for(int i=0;i<16;i++){
+		for(int j=0;j<32;j++){
+			std::cout<<tabla[32*i+j];
+		}
+		std::cout<<std::endl;
 	}
 	for(int i=9;i>2;i--){
 		for(int j=0;j<(MEM/(1<<i));j++){
