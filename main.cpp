@@ -24,7 +24,7 @@
 #define UNDL(x) "\x1B[4m" x RST
 
 void bloque_libre::Imprimir(){
-	std::cout<<adress<<", ";
+	std::cout<<" "<<adress<<",";
 }
 
 //TABLA DE ALOCACIONES
@@ -48,6 +48,7 @@ int main(){
 	actualizar_tabla(ptr1, 14, '_');
 	
 	//IMPRIMIR ESTADO DE LA MEMORIA
+	std::cout<<"MAPA DE MEMORIA"<<std::endl;
 	printf(FWHT("%c"),201);
 	for (int i = 0; i < 32; i++){
 		printf(FWHT("%c"),205);	
@@ -56,7 +57,13 @@ int main(){
 	for(int i=0;i<16;i++){
 		printf(FWHT("%c"),186);
 		for(int j=0;j<32;j++){
-			std::cout<<tabla[32*i+j];
+			if(tabla[32*i+j]=='_'){
+				printf(FGRN("%c"),tabla[32*i+j]);
+			}else if(tabla[32*i+j]=='#'){
+				printf(FBLU("%c"),tabla[32*i+j]);
+			}else{
+				printf(FRED("%c"),tabla[32*i+j]);
+			}
 		}
 		printf(FWHT("%c"),186);
 		std::cout<<std::endl;
@@ -68,6 +75,7 @@ int main(){
 	printf(FWHT("%c\n"),188);
 
 	//IMPRIMIR BITMAP
+	std::cout<<"BITMAP"<<std::endl;
 	printf(FWHT("%c"),201); //primer
 	for(int k=0;k<127;k++){
 			printf(FWHT("%c"),205);
@@ -98,6 +106,7 @@ int main(){
 	printf(FWHT("%c\n"),188);
 
 	//IMPRIMIR FREELIST
+	std::cout<<"FREELIST"<<std::endl;
 	for(int i=9;i>=0;i--){
 		std::cout<<i<<":";
 		free_list[i].Recorrer();
@@ -112,8 +121,15 @@ void tabla_init(){
 	}	
 }
 
-void actualizar_tabla(int adr, int tam, char nom){	//Pone el nombre del bloque alocado para dsp imprimirlo (solucion fea)
+void actualizar_tabla(int adr, int tam, char nom){	//Pone el nombre del bloque alocado para dsp imprimirlo
+	if (nom=='_'){
+		tam = 1<<(redondear(tam));
+
+	}
 	for(int i=adr;i<(adr+tam);i++){
 		tabla[i]=nom;
+	}
+	for(int i=(adr+tam);i<(adr+(1<<redondear(tam)));i++){
+		tabla[i]='#';
 	}
 }
