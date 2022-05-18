@@ -1,8 +1,8 @@
-Implementación utilizando un arbol binario
+Implementación utilizando un árbol binario:
 
 Primer interpretación del algoritmo.
 
-La intención era lograr una solución facil, pero
-resultó en todo lo contrario. No solo no es simple
-para programar tambien resulta en un algoritmo
-altamente ineficiente.
+La intención era lograr una solución fácil, pero
+resultó en todo lo contrario. No sólo no es simple
+para programar, sino que también resulta en un 
+algoritmo altamente ineficiente.
