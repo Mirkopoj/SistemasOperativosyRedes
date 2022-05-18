@@ -93,7 +93,7 @@ int alocar(int tam){ //Busca en la FREE LIST donde buddy_alloc, y dsp actualiza 
 	return asignacion.adress;
 }
 
-void liberar(int adr, int tam){ //Busca en el bit map y dsp actualiza la free_list y la abla para imprimir
+void liberar(int adr, int tam){ //Busca en el bit map y dsp actualiza la free_list y la tabla para imprimir
 	int exp_asignado = redondear(tam);
 	int merge_count;
 	merge_count = actualiar_bit_map_free(adr, exp_asignado);
